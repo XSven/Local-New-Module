@@ -1,0 +1,61 @@
+NAME
+
+Local::New::Module - ...
+
+DESCRIPTION
+
+...
+
+INSTALLATION
+
+To install this module, use your preferred CPAN client. If this is cpanm then
+run the command
+
+  cpanm Local::New::Module
+
+DOCUMENTATION
+
+After the installation, you can find further documentation using the command
+
+  perldoc Local::New::Module
+
+MAINTENANCE
+
+To maintain this module, run the following commands:
+
+  cpanm         --notest  --with-configure --with-develop --no-man-pages --local-lib-contained local --installdeps .
+  cpm   install --no-test --with-configure --with-develop                --local-lib-contained local                 --show-build-log-on-failure
+  perl Makefile.PL verbose     # configure
+  make                         # build
+  make RELEASE_TESTING=1 test  # test using Test::Harness
+  make RELEASE_TESTING=1 testp # test using TAP::Harness
+  make RELEASE_TESTING=1 testn # test using no harness
+  make cover                   # coverage statistics in vim format
+
+REMARKS
+
+- The Test::More (version 0.47) TAP producer
+  (https://testanything.org/producers.html#perl5) and its builder Test::Builder
+  (version 0.17) are copied from perl 5.6.2 and stored in the directory t/lib.
+
+- As of version 3.07 the prove TAP consumer
+  (https://testanything.org/consumers.html#perl) assigns the value 1 to the
+  environment variable TEST_VERBOSE, if executed with the "--verbose" option.
+
+- The "test" and "testp" Makefile targets arrange "blib/arch", "blib/lib"
+  differently in @INC. "test" uses the just mentioned order. "testp" uses the
+  reverse order that means "blib/lib" before "blib/arch".
+
+- The cpanfile describes CPAN dependencies that are installed with CPAN
+  clients.
+
+- In verbose mode (TEST_VERBOSE=1) the t/load.t test script show all kinds of
+  information known to each test script: Perl version, Harness version,
+  Test::More version, Test::Builder version, PERL5LIB, @INC, and PATH.
+
+COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2024 by Sven Willenbuecher.
+
+This is free software; you can redistribute it and/or modify it under the same
+terms as the Perl 5 programming language system itself.

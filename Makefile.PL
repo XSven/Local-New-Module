@@ -1,0 +1,61 @@
+use strict;
+use warnings;
+
+use Config                qw( %Config );
+use File::Spec::Functions qw( catfile rel2abs );
+
+BEGIN {
+  # the author extensions prepend local/lib/perl5 to @INC
+  require &rel2abs( catfile( qw( maint authorextensions.pl ) ) )
+    unless ( $Config{ osname } =~ m/\A(?:freebsd|openbsd|solaris)\z/ or exists( $ENV{ MAKELEVEL } ) )
+}
+
+use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
+use File::ShareDir::Install       qw( install_share );
+
+my @main_module    = qw( Local New Module );
+my $version        = '1.0.0';
+my $release_status = 'unstable';               # transition: unstable => testing => stable
+
+my $distname          = join '-',  @main_module;
+my $main_module       = join '::', @main_module;
+my $main_module_file  = catfile( 'lib', @main_module ) . '.pm';
+my %WriteMakefileArgs = (
+  NAME             => $main_module,
+  AUTHOR           => 'Sven Willenbuecher <sven.willenbuecher@gmx.de>',
+  VERSION_FROM     => $main_module_file,
+  ABSTRACT_FROM    => catfile( 'lib', @main_module ) . '.pod',
+  LICENSE          => 'Perl_5',
+  MIN_PERL_VERSION => '5.14.4',
+  DISTVNAME        => "$distname-$version"
+    . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
+  META_MERGE => {
+    'meta-spec'    => { version => 2 },
+    release_status => $release_status,
+    provides       => {
+      $main_module => {
+        file    => $main_module_file,
+        version => $version
+      }
+    },
+    resources => {
+      repository => {
+        type => 'git',
+        url  => "git://github.com/XSven/$distname.git",
+        web  => "https://github.com/XSven/$distname"
+      },
+      bugtracker => {
+        web => "https://github.com/XSven/$distname/issues"
+      }
+    }
+  },
+  clean     => { FILES                => "$distname* cover_db" },
+  dist      => { COMPRESS             => 'gzip -9f', SUFFIX => 'gz', },
+  realclean => { FILES                => 'local' },
+  test      => { RECURSIVE_TEST_FILES => 1 }
+);
+
+# "dist" refers to the $(DISTNAME) macro variable
+# install_share dist => $dir;
+# install_share module => $main_module => $dir;
+WriteMakefile( %WriteMakefileArgs )
