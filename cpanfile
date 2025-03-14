@@ -11,7 +11,7 @@ on configure => sub { };
 on runtime => sub { };
 
 on test => sub {
-  requires 'Class::Method::Modifiers' => '0';
+  requires 'Class::Method::Modifiers' => '0'
 };
 
-on develop => sub { };
+on develop => sub { }

@@ -106,5 +106,6 @@ sub _which ( $ ) {
     my $file = catfile( $_, $executable );
     return $file if -x $file
   }
+
   undef
 }
