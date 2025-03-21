@@ -1,3 +1,6 @@
+# Avoid dist file
+\bLocal-New-Module-
+
 # Avoid version control files.
 \bRCS\b
 \bCVS\b
