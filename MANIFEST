@@ -1,11 +1,12 @@
 .perlcriticrc
 Changes
+CONTRIBUTING
 cpanfile
 lib/Local/New/Module.pm
 lib/Local/New/Module.pod
 LICENSE
-maint/authorextensions.pl
 maint/cpanfile
+maint/developerextensions.pl
 maint/runtests.pl
 Makefile.PL
 MANIFEST			This list of files

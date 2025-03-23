@@ -1,0 +1,46 @@
+CONTRIBUTING
+
+To maintain this module, you have to install its dependencies first. Two
+alternative CPAN client invocations that install the prerequisites in the
+local/ directory are
+
+  cpanm         --notest  --with-configure --with-develop --no-man-pages --local-lib-contained local --installdeps .
+  cpm   install --no-test --with-configure --with-develop                --local-lib-contained local                 --show-build-log-on-failure
+
+It follows the "configure" step that creates a Makefile
+
+  perl Makefile.PL verbose
+
+You may explicitly trigger the "build" step, calling
+
+  make 
+
+before executing all test scripts
+
+  make test   # using Test::Harness (recursive and random)
+  make testp  # using TAP::Harness  (recursive and random)
+  make testn  # using no harness    (recursive)
+
+Adding the command-line macro definition
+
+  RELEASE_TESTING=1
+
+to a "test*" target enables the release testing context.
+
+  make testlm
+
+executes the last modified test script and
+
+  make cover
+
+creates a test coverage statistics report in vim format.
+
+REMARKS
+
+- The test and testp targets arrange blib/arch, blib/lib differently in @INC.
+  test uses the just mentioned order. testp uses the reverse order that means
+  blib/lib before blib/arch.
+
+- In verbose mode (TEST_VERBOSE=1) the t/load.t test script shows all kinds of
+  information known to each test script: Perl version, Harness version,
+  Test::More version, Test::Builder version, PERL5LIB, @INC, and PATH.
