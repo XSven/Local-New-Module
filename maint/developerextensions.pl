@@ -44,9 +44,16 @@ if ( exists $ENV{ PATH } ) {
   *MY::test_via_harness = sub {
     my ( $self, $perl, $tests ) = @_;
 
-    "\t$perl -Mlib=$local_lib "
+    "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
       . rel2abs( catfile( qw( maint runtests.pl ) ) )
       . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
+  };
+
+  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
+  *MY::test_via_script = sub {
+    my ( $self, $perl, $tests ) = @_;
+
+    "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
   };
 
   # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
