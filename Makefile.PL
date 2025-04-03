@@ -56,6 +56,6 @@ my %WriteMakefileArgs = (
 );
 
 # "dist" refers to the $(DISTNAME) macro variable
-# install_share dist => $dir;
-# install_share module => $main_module => $dir;
+# install_share dist => 'share';
+# install_share module => $main_module => 'share';
 WriteMakefile( %WriteMakefileArgs )
