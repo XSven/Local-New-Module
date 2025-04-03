@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 on configure => sub {
+  requires 'Carp'                          => '0';
   requires 'Config'                        => '0';
   requires 'ExtUtils::MakeMaker'           => '6.76';     # Offers the RECURSIVE_TEST_FILES feature
   requires 'ExtUtils::MakeMaker::CPANfile' => '0';

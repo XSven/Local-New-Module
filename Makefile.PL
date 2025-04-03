@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use Carp                  qw( croak );
 use Config                qw( %Config );
 use File::Spec::Functions qw( catfile rel2abs );
 
@@ -12,6 +13,10 @@ BEGIN {
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
 use File::ShareDir::Install       qw( install_share );
+
+for ( qw( EMAIL FULL_NAME ) ) {
+  croak "$_ environment variable is not set, stopped" unless exists $ENV{ $_ };
+}
 
 my @main_module    = qw( Local New Module );
 my $version        = '1.0.0';
