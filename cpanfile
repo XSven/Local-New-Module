@@ -10,8 +10,6 @@ on configure => sub { };
 
 on runtime => sub { };
 
-on test => sub {
-  requires 'Class::Method::Modifiers' => '0'
-};
+on test => sub { };
 
 on develop => sub { }

@@ -3,7 +3,7 @@ use warnings;
 
 on configure => sub {
   requires 'Config'                        => '0';
-  requires 'ExtUtils::MakeMaker'           => '6.76';     # offers the RECURSIVE_TEST_FILES feature
+  requires 'ExtUtils::MakeMaker'           => '6.76';     # Offers the RECURSIVE_TEST_FILES feature
   requires 'ExtUtils::MakeMaker::CPANfile' => '0';
   requires 'File::Basename'                => '0';
   requires 'File::ShareDir::Install'       => '0';
