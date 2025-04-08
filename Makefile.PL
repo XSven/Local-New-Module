@@ -27,11 +27,11 @@ my $release_status = 'unstable';               # transition: unstable => testing
 
 my $distname          = join '-',  @main_module;
 my $main_module       = join '::', @main_module;
-my $main_module_file  = catfile( 'lib', @main_module ) . '.pm';
+my $main_module_file  = catfile( @main_module ) . '.pm';
 my %WriteMakefileArgs = (
   NAME             => $main_module,
   AUTHOR           => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
-  VERSION_FROM     => $main_module_file,
+  VERSION_FROM     => catfile( 'lib', $main_module_file ),
   ABSTRACT_FROM    => catfile( 'lib', @main_module ) . '.pod',
   LICENSE          => 'Perl_5',
   MIN_PERL_VERSION => '5.14.4',
@@ -42,7 +42,7 @@ my %WriteMakefileArgs = (
     release_status => $release_status,
     provides       => {
       $main_module => {
-        file    => $main_module_file,
+        file    => catfile( 'lib', $main_module_file ),
         version => $version
       }
     },
