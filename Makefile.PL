@@ -25,14 +25,15 @@ my @main_module    = qw( Local New Module );
 my $version        = '1.0.0';
 my $release_status = 'unstable';               # transition: unstable => testing => stable
 
-my $distname          = join '-',  @main_module;
-my $main_module       = join '::', @main_module;
-my $main_module_file  = catfile( @main_module ) . '.pm';
-my %WriteMakefileArgs = (
+my $distname            = join '-',  @main_module;
+my $main_module         = join '::', @main_module;
+my $main_module_file    = catfile( @main_module ) . '.pm';
+my $main_module_podfile = catfile( @main_module ) . '.pod';
+my %WriteMakefileArgs   = (
   NAME             => $main_module,
   AUTHOR           => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
   VERSION_FROM     => catfile( 'lib', $main_module_file ),
-  ABSTRACT_FROM    => catfile( 'lib', @main_module ) . '.pod',
+  ABSTRACT_FROM    => catfile( 'lib', $main_module_podfile ),
   LICENSE          => 'Perl_5',
   MIN_PERL_VERSION => '5.14.4',
   DISTVNAME        => "$distname-$version"
