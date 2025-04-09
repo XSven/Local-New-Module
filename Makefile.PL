@@ -38,7 +38,8 @@ my %WriteMakefileArgs   = (
   LICENSE          => 'Perl_5',
   MIN_PERL_VERSION => '5.14.4',
   DISTVNAME        => "$distname-$version"
-    . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
+  . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
+  EXE_FILES  => [ glob( join( ' ', map { catfile( $_, '*' ) } qw( bin script ) ) ) ],
   META_MERGE => {
     'meta-spec'    => { version => 2 },
     release_status => $release_status,
