@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+package MY;
+
 use lib  ();
 use subs qw( _which );
 
@@ -37,31 +39,29 @@ if ( exists $ENV{ PATH } ) {
 }
 
 # https://metacpan.org/pod/ExtUtils::MakeMaker#Overriding-MakeMaker-Methods
-{
-  no warnings 'once'; ## no critic (ProhibitNoWarnings)
 
-  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
-  *MY::test_via_harness = sub {
-    my ( $self, $perl, $tests ) = @_;
+# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
+sub test_via_harness {
+  my ( $self, $perl, $tests ) = @_;
 
-    "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
-      . rel2abs( catfile( qw( maint runtests.pl ) ) )
-      . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
-  };
+  "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
+    . rel2abs( catfile( qw( maint runtests.pl ) ) )
+    . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
+}
 
-  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
-  *MY::test_via_script = sub {
-    my ( $self, $perl, $tests ) = @_;
+# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
+sub test_via_script {
+  my ( $self, $perl, $tests ) = @_;
 
-    "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
-  };
+  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
+}
 
-  # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
-  *MY::postamble = sub {
-    my ( $self ) = @_;
-    my $make_fragment = '';
+# https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
+sub postamble {
+  my ( $self ) = @_;
+  my $make_fragment = '';
 
-    $make_fragment .= <<"MAKE_FRAGMENT";
+  $make_fragment .= <<"MAKE_FRAGMENT";
 export PATH := $ENV{ PATH }
 undefine PERL5LIB
 
@@ -80,8 +80,8 @@ testn: pure_all
 	done
 MAKE_FRAGMENT
 
-    my $prove = _which 'prove';
-    $make_fragment .= <<"MAKE_FRAGMENT" if $prove;
+  my $prove = _which 'prove';
+  $make_fragment .= <<"MAKE_FRAGMENT" if $prove;
 
 # runs test scripts through TAP::Harness (prove) instead of Test::Harness (ExtUtils::MakeMaker)
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#\@INC
@@ -90,20 +90,18 @@ testp: pure_all
 	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file"  : '' ) } --blib -I$t_lib_rel -I$local_lib_rel -w --recurse --shuffle \$(TEST_FILES)
 MAKE_FRAGMENT
 
-    my $cover = _which 'cover';
-    $make_fragment .= <<"MAKE_FRAGMENT" if $cover;
+  my $cover = _which 'cover';
+  $make_fragment .= <<"MAKE_FRAGMENT" if $cover;
 
 .PHONY: cover
 cover:
 	\$(NOECHO) $cover -test -ignore ${ \( basename( $local_lib_root ) ) } -report vim
 MAKE_FRAGMENT
 
-    $make_fragment .= join "\n", '', File::ShareDir::Install::postamble( $self )
-      if is_loaded 'File::ShareDir::Install';
+  $make_fragment .= join "\n", '', File::ShareDir::Install::postamble( $self )
+    if is_loaded 'File::ShareDir::Install';
 
-    $make_fragment
-  }
-
+  $make_fragment
 }
 
 sub _which ( $ ) {
@@ -116,3 +114,5 @@ sub _which ( $ ) {
 
   undef
 }
+
+1

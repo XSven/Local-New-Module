@@ -9,8 +9,7 @@ use Config                qw( %Config );
 use File::Spec::Functions qw( catfile rel2abs );
 
 BEGIN {
-  # the author extensions prepend local/lib/perl5 to @INC
-  require &rel2abs( catfile( qw( maint developerextensions.pl ) ) )
+  require &rel2abs( catfile( qw( maint MY.pm ) ) )
     unless ( $Config{ osname } =~ m/\A(?:freebsd|openbsd|solaris)\z/ or exists( $ENV{ MAKELEVEL } ) )
 }
 
