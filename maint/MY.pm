@@ -18,7 +18,7 @@ BEGIN {
 
   $local_bin = catfile( $local_lib_root, qw( bin ) );
 
-  $local_lib_rel = catdir( $ARGV[0], qw( lib perl5 ) );
+  $local_lib_rel = catdir( $ARGV[ 0 ], qw( lib perl5 ) );
   $local_lib     = rel2abs( $local_lib_rel );
   # need to prepend local library path to locate ExtUtils::MakeMaker::CPANfile
   # and other configure related modules
@@ -40,11 +40,11 @@ if ( exists $ENV{ PATH } ) {
 
 # https://metacpan.org/pod/ExtUtils::MakeMaker#Overriding-MakeMaker-Methods
 
-sub distdir {
+sub dist_test {
   my ( $self ) = @_;
 
-  my $inherited = $self->SUPER::distdir;
-  $inherited =~ s/^(distdir ?:.+) *$/$1 distlocal/m;
+  my $inherited = $self->SUPER::dist_test;
+  $inherited =~ s/^(disttest ?:.+)$/$1\n\t\$(CP) -R $local_lib_root \$(DISTVNAME)/m;
   $inherited
 }
 
@@ -69,9 +69,6 @@ sub postamble {
   my ( $self ) = @_;
 
   my $make_fragment = <<"MAKE_FRAGMENT";
-distlocal : create_distdir
-	\$(CP) -R $local_lib_root \$(DISTVNAME)
-
 export PATH := $ENV{ PATH }
 undefine PERL5LIB
 
