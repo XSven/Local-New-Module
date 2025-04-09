@@ -5,12 +5,14 @@ use strict;
 use warnings;
 
 use Carp                  qw( croak );
-use Config                qw( %Config );
 use File::Spec::Functions qw( catfile rel2abs );
 
 BEGIN {
-  require &rel2abs( catfile( qw( maint MY.pm ) ) )
-    unless ( $Config{ osname } =~ m/\A(?:freebsd|openbsd|solaris)\z/ or exists( $ENV{ MAKELEVEL } ) )
+  # pass cpm's default --local-lib-contained DIR to the required MY module using
+  # the localized first element of @ARGV
+  if ( -d ( local $ARGV[ 0 ] = 'local' ) ) {
+    require &rel2abs( catfile( qw( maint MY.pm ) ) );
+  }
 }
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
