@@ -43,6 +43,14 @@ if ( exists $ENV{ PATH } ) {
 
 # https://metacpan.org/pod/ExtUtils::MakeMaker#Overriding-MakeMaker-Methods
 
+sub dist_basics {
+  my ( $self ) = @_;
+
+  my $inherited = $self->SUPER::dist_basics;
+  $inherited =~ s/fullcheck$/'exit( scalar( map { \@\$\$_ } fullcheck() ) ? 1 : 0 )'/m;
+  $inherited
+}
+
 sub dist_test {
   my ( $self ) = @_;
 
@@ -106,6 +114,14 @@ MAKE_FRAGMENT
 .PHONY: cover
 cover:
 	\$(NOECHO) $cover -test -ignore ${ \( basename( $local_lib_root ) ) } -report vim
+MAKE_FRAGMENT
+
+  my $podman = _which 'podman';
+  $make_fragment .= <<"MAKE_FRAGMENT" if $podman;
+
+.PHONY: buildimage
+buildimage: dist
+	\$(NOECHO) $podman image build --no-cache --env FULL_NAME=\"\$(FULL_NAME)\" --env EMAIL=\$(EMAIL) --build-arg DISTVNAME=\$(DISTVNAME) --build-arg INST_ARCHLIB=\$(INST_ARCHLIB) --build-arg INST_LIB=\$(INST_LIB) --build-arg local_lib_rel=$local_lib_rel --build-arg INST_SCRIPT=\$(INST_SCRIPT) .
 MAKE_FRAGMENT
 
   $make_fragment .= join "\n", '', File::ShareDir::Install::postamble( $self )

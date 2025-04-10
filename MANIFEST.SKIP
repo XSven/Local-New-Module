@@ -1,5 +1,6 @@
-# Avoid dist file
+# Avoid dist file and container file
 \bLocal-New-Module-
+\bDockerfile$
 
 # Avoid version control files.
 \bRCS\b
