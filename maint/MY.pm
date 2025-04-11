@@ -119,9 +119,10 @@ MAKE_FRAGMENT
   my $podman = _which 'podman';
   $make_fragment .= <<"MAKE_FRAGMENT" if $podman;
 
-.PHONY: buildimage
-buildimage: distcheck dist
-	\$(NOECHO) \$(FULLPERLRUN) -s ${ \( rel2abs( catfile( qw( maint dockerfile.pl ) ) ) ) } -Distvname=\$(DISTVNAME) -Inst_archlib=\$(INST_ARCHLIB) -Inst_lib=\$(INST_LIB) -Local_lib_rel=$local_lib_rel -Exe_file=\$(INST_SCRIPT)\$(DFSEP)\$(notdir \$(EXE_FILES)) | $podman image build --no-cache --env FULL_NAME=\"\$(FULL_NAME)\" --env EMAIL=\$(EMAIL) -f - .
+.PHONY: imagebuild
+imagebuild: distcheck dist
+	\$(NOECHO) \$(FULLPERLRUN) -s ${ \( rel2abs( catfile( qw( maint dockerfile.pl ) ) ) ) } -Distvname=\$(DISTVNAME) -Inst_archlib=\$(INST_ARCHLIB) -Inst_lib=\$(INST_LIB) -Local_lib_rel=$local_lib_rel -Exe_file=\$(INST_SCRIPT)\$(DFSEP)\$(notdir \$(EXE_FILES)) | \\
+	$podman image build --no-cache --env FULL_NAME=\"\$(FULL_NAME)\" --env EMAIL=\$(EMAIL) --tag \$(notdir \$(EXE_FILES)):\$(VERSION) --file - .
 MAKE_FRAGMENT
 
   $make_fragment .= join "\n", '', File::ShareDir::Install::postamble( $self )
