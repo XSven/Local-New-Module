@@ -43,6 +43,8 @@ if ( exists $ENV{ PATH } ) {
 
 # https://metacpan.org/pod/ExtUtils::MakeMaker#Overriding-MakeMaker-Methods
 
+# new feature: allow fullcheck() to return a boolean value in scalar context
+# https://github.com/Perl-Toolchain-Gang/ExtUtils-Manifest/issues/45
 sub dist_basics {
   my ( $self ) = @_;
 

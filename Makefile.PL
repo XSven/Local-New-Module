@@ -37,6 +37,8 @@ my %WriteMakefileArgs   = (
   ABSTRACT_FROM    => catfile( 'lib', $main_module_podfile ),
   LICENSE          => 'Perl_5',
   MIN_PERL_VERSION => '5.14.4',
+  # safe naming of custom arguments passed to Makefile.PL
+  # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/470
   DISTVNAME        => "$distname-$version"
   . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
   EXE_FILES  => [ glob( join( ' ', map { catfile( $_, '*' ) } qw( bin script ) ) ) ],
