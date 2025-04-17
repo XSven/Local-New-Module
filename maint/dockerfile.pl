@@ -1,13 +1,17 @@
 use strict;
 use warnings;
 
-our ( $Distvname, $Inst_archlib, $Inst_lib, $Local_lib_rel, $Exe_file );
+our ( $Tardist, $Distvname, $Inst_archlib, $Inst_lib, $Local_lib_rel, $Exe_file );
 
 print STDOUT <<"DOCKERFILE"
 FROM docker.io/library/perl:5.38.3-bookworm
 WORKDIR /opt
-ADD ${Distvname}.tar.gz .
+ADD ${Tardist} .
 WORKDIR ${Distvname}
+RUN [ "apt-get", "update", "--yes" ]
+RUN [ "apt-get", "dist-upgrade", "--yes" ]
+RUN [ "apt-get", "autoremove", "--yes" ]
+RUN [ "apt-get", "clean" ]
 # upgrade cpm
 RUN [ "cpm", "install", "--no-test", "--global", "App::cpm", "--show-build-log-on-failure" ]
 # install dependencies
