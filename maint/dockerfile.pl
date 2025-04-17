@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-our ( $Tardist, $Distvname, $Inst_archlib, $Inst_lib, $Local_lib_rel, $Exe_file );
+our ( $Tardist, $Distvname, $Inst_archlib, $Inst_lib, $Local_lib_rel, $Exe_file ); ## no critic (ProhibitPackageVars)
 
 print STDOUT <<"DOCKERFILE"
 FROM docker.io/library/perl:5.38.3-bookworm
