@@ -22,14 +22,14 @@ for ( qw( EMAIL FULL_NAME ) ) {
   croak "$_ environment variable is not set, stopped" unless exists $ENV{ $_ };
 }
 
-my @main_module    = qw( Local New Module );
-my $version        = '1.0.0';
-my $release_status = 'unstable';               # transition: unstable => testing => stable
+my @main_module_namespace = qw( Local New Module );
+my $version               = '1.0.0';
+my $release_status        = 'unstable';               # transition: unstable => testing => stable
 
-my $distname            = join '-',  @main_module;
-my $main_module         = join '::', @main_module;
-my $main_module_file    = catfile( @main_module ) . '.pm';
-my $main_module_podfile = catfile( @main_module ) . '.pod';
+my $distname            = join '-',  @main_module_namespace;
+my $main_module         = join '::', @main_module_namespace;
+my $main_module_file    = catfile( @main_module_namespace ) . '.pm';
+my $main_module_podfile = catfile( @main_module_namespace ) . '.pod';
 my %WriteMakefileArgs   = (
   NAME             => $main_module,
   AUTHOR           => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
@@ -39,8 +39,8 @@ my %WriteMakefileArgs   = (
   MIN_PERL_VERSION => '5.14.4',
   # safe naming of custom arguments passed to Makefile.PL
   # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/470
-  DISTVNAME        => "$distname-$version"
-  . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
+  DISTVNAME => "$distname-$version"
+    . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
   EXE_FILES  => [ glob( join( ' ', map { catfile( $_, '*' ) } qw( bin script ) ) ) ],
   META_MERGE => {
     'meta-spec'    => { version => 2 },
@@ -71,4 +71,5 @@ my %WriteMakefileArgs   = (
 # "dist" refers to the $(DISTNAME) macro variable
 # install_share dist => 'share';
 # install_share module => $main_module => 'share';
-WriteMakefile( %WriteMakefileArgs )
+no warnings qw( void );
+caller() ? \%WriteMakefileArgs : WriteMakefile( %WriteMakefileArgs )
