@@ -35,5 +35,5 @@ sub wanted {
   }
 }
 
-our $^I = '';    # enable inplace-edit
+local $^I = '';    # enable inplace-edit
 find( { wanted => \&wanted, no_chdir => 1 }, $project_dir );
