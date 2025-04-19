@@ -2,3 +2,4 @@ Makefile.PL export-subst
 maint/MY.pm export-subst
 maint/cpanfile export-subst
 maint/runtests.pl export-subst
+maint/selfrename.pl export-subst
