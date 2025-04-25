@@ -58,6 +58,7 @@ sub dist_test {
 
   my $inherited = $self->SUPER::dist_test;
   $inherited =~ s/^(disttest ?:.+)$/$1\n\t\$(CP) -R $local_lib_root \$(DISTVNAME)/m;
+  $inherited =~ s/( test )/$1RELEASE_TESTING=1 /m;
   $inherited
 }
 
