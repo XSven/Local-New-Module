@@ -63,7 +63,7 @@ my %WriteMakefileArgs   = (
     }
   },
   clean     => { FILES                => "$distname* cover_db" },
-  dist      => { COMPRESS             => 'gzip -9f', SUFFIX => 'gz', },
+  dist      => { TARFLAGS             => 'cf', COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
   realclean => { FILES                => 'local' },
   test      => { RECURSIVE_TEST_FILES => 1 }
 );
