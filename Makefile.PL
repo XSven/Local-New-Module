@@ -10,9 +10,8 @@ use File::Spec::Functions qw( catfile rel2abs );
 BEGIN {
   # pass cpm's default --local-lib-contained DIR to the required MY module using
   # the localized first element of @ARGV
-  if ( -d ( local $ARGV[ 0 ] = 'local' ) ) {
-    require &rel2abs( catfile( qw( maint MY.pm ) ) );
-  }
+  local $ARGV[ 0 ] = 'local';
+  require &rel2abs( catfile( 'maint', -d $ARGV[ 0 ] ? $ARGV[ 0 ] : (), 'MY.pm' ) )
 }
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
