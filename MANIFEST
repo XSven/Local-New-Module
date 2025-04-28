@@ -7,6 +7,7 @@ lib/Local/New/Module.pod
 LICENSE
 maint/containerfile.pl
 maint/cpanfile
+maint/local/MY.pm
 maint/MY.pm
 maint/runtests.pl
 maint/selfrename.pl

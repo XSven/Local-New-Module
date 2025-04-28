@@ -78,7 +78,7 @@
 \btags$
 
 # Avoid cpanm local::lib install directory.
-\blocal\b
+^local\b
 
 # Avoid .github directory.
 \B\.github\b
