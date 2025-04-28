@@ -2,13 +2,13 @@ use strict;
 use warnings;
 
 use Carp                  qw( croak );
-use File::Spec::Functions qw( catfile rel2abs );
+use File::Spec::Functions qw( catfile curdir rel2abs );
 
 BEGIN {
   # pass cpm's default --local-lib-contained DIR to the required MY module using
   # the localized first element of @ARGV
   local $ARGV[ 0 ] = 'local';
-  require &rel2abs( catfile( 'maint', -d $ARGV[ 0 ] ? $ARGV[ 0 ] : (), 'MY.pm' ) )
+  require &rel2abs( catfile( -d $ARGV[ 0 ] ? 'maint' : curdir, 'MY.pm' ) )
 }
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );

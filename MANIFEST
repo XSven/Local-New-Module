@@ -7,12 +7,12 @@ lib/Local/New/Module.pod
 LICENSE
 maint/containerfile.pl
 maint/cpanfile
-maint/local/MY.pm
 maint/MY.pm
 maint/runtests.pl
 maint/selfrename.pl
 Makefile.PL
 MANIFEST			This list of files
+MY.pm
 README
 script/cli-tool
 t/basic.t
