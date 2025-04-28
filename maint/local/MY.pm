@@ -1,6 +1,3 @@
-
-# $Format:%D, %h$
-
 use strict;
 use warnings;
 
