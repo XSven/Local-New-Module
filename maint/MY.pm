@@ -71,20 +71,25 @@ if ( defined $local_lib_rel ) {
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
-# CATEGORY: keep testlm and File::ShareDir::Install::postamble if not local/
-#           do not export PATH and undefine PERL5LIB if not local/
-#
 sub postamble {
   my ( $self ) = @_;
 
-  my $make_fragment = <<"MAKE_FRAGMENT";
+  my $make_fragment = '';
+
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $local_lib_root;
 export PATH := $ENV{ PATH }
 undefine PERL5LIB
+MAKE_FRAGMENT
+
+  $make_fragment .= <<"MAKE_FRAGMENT";
 
 # runs the last modified test script
 .PHONY: testlm
 testlm:
 	\$(NOECHO) \$(MAKE) TEST_FILES=\$\$(perl -e 'print STDOUT ( sort { -M \$\$a > -M \$\$b } glob( "\$\$ARGV[0]" ) )[0]' '\$(TEST_FILES)') test
+MAKE_FRAGMENT
+
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $local_lib_rel;
 
 # runs test scripts without a harness
 # https://www.perlmonks.org/?node_id=1035633 (Directory Separator)
@@ -97,7 +102,7 @@ testn: pure_all
 MAKE_FRAGMENT
 
   my $prove = _which 'prove';
-  $make_fragment .= <<"MAKE_FRAGMENT" if $prove;
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $prove and defined $local_lib_rel;
 
 # runs test scripts through TAP::Harness (prove) instead of Test::Harness (ExtUtils::MakeMaker)
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#\@INC
@@ -107,7 +112,7 @@ testp: pure_all
 MAKE_FRAGMENT
 
   my $cover = _which 'cover';
-  $make_fragment .= <<"MAKE_FRAGMENT" if $cover;
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $cover and defined $local_lib_root;
 
 .PHONY: cover
 cover:
@@ -115,7 +120,7 @@ cover:
 MAKE_FRAGMENT
 
   my $podman = _which 'podman';
-  $make_fragment .= <<"MAKE_FRAGMENT" if $podman;
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $podman and defined $local_lib_rel;
 
 .PHONY: imagebuild
 imagebuild: distcheck dist
