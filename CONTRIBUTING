@@ -27,6 +27,10 @@ Adding the command-line macro definition
 
 to a "test*" target enables the release testing context.
 
+  make disttest
+
+implicitly enables the release testing context (RELEASE_TESTING=1).
+
   make testlm
 
 executes the last modified test script and

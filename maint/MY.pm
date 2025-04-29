@@ -45,6 +45,7 @@ sub dist_test {
 
   my $inherited = $self->SUPER::dist_test;
   $inherited =~ s/^(disttest ?:.+)$/$1\n\t\$(CP) -R $local_lib_root \$(DISTVNAME)/m if defined $local_lib_root;
+  # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#release_testing
   $inherited =~ s/( test )/$1RELEASE_TESTING=1 /m;
   $inherited
 }
