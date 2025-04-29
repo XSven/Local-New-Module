@@ -42,6 +42,7 @@ if ( exists $ENV{ PATH } ) {
 
 # new feature: allow fullcheck() to return a boolean value in scalar context
 # https://github.com/Perl-Toolchain-Gang/ExtUtils-Manifest/issues/45
+# CATEGORY: is independent of local/ => use always
 sub dist_basics {
   my ( $self ) = @_;
 
@@ -50,6 +51,7 @@ sub dist_basics {
   $inherited
 }
 
+# CATEGORY: CP should be done only if $local_lib_root is defined => use always
 sub dist_test {
   my ( $self ) = @_;
 
@@ -60,6 +62,7 @@ sub dist_test {
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
+# CATEGORY: don't use if not local/
 sub test_via_harness {
   my ( $self, $perl, $tests ) = @_;
 
@@ -69,6 +72,7 @@ sub test_via_harness {
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
+# CATEGORY: don't use if not local/
 sub test_via_script {
   my ( $self, $perl, $tests ) = @_;
 
@@ -76,6 +80,9 @@ sub test_via_script {
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
+# CATEGORY: keep testlm and File::ShareDir::Install::postamble if not local/
+#           do not export PATH and undefine PERL5LIB if not local/
+#
 sub postamble {
   my ( $self ) = @_;
 
