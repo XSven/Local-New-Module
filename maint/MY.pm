@@ -32,7 +32,6 @@ if ( defined $local_bin ) {
 
 # new feature: allow fullcheck() to return a boolean value in scalar context
 # https://github.com/Perl-Toolchain-Gang/ExtUtils-Manifest/issues/45
-# CATEGORY: is independent of local/ => use always
 sub dist_basics {
   my ( $self ) = @_;
 
@@ -41,7 +40,6 @@ sub dist_basics {
   $inherited
 }
 
-# CATEGORY: CP should be done only if $local_lib_root is defined => use always
 sub dist_test {
   my ( $self ) = @_;
 
@@ -51,22 +49,25 @@ sub dist_test {
   $inherited
 }
 
-# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
-# CATEGORY: don't use if not local/
-sub test_via_harness {
-  my ( $self, $perl, $tests ) = @_;
+if ( defined $local_lib_rel ) {
+  no warnings 'once'; ## no critic (ProhibitNoWarnings)
 
-  "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
-    . rel2abs( catfile( qw( maint runtests.pl ) ) )
-    . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
-}
+  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
+  *test_via_harness = sub {
+    my ( $self, $perl, $tests ) = @_;
 
-# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
-# CATEGORY: don't use if not local/
-sub test_via_script {
-  my ( $self, $perl, $tests ) = @_;
+    "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
+      . rel2abs( catfile( qw( maint runtests.pl ) ) )
+      . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
+  };
 
-  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
+  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
+  *test_via_script = sub {
+    my ( $self, $perl, $tests ) = @_;
+
+    "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
+  }
+
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
