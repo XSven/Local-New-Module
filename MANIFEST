@@ -17,5 +17,6 @@ README
 script/cli-tool
 t/basic.t
 t/critic.t
+t/lib/Local/Test.pm
 t/load.t
 t/pod.t

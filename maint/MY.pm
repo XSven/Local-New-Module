@@ -4,38 +4,28 @@ use warnings;
 package MY;
 
 use lib  ();
-use subs qw( _which );
+use subs qw( _local _which );
 
 use Config                qw( %Config );
 use File::Basename        qw( basename );
 use File::Spec::Functions qw( catdir catfile rel2abs );
 use Module::Loaded        qw( is_loaded );
 
-my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file );
+my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ) = _local $ARGV[ 0 ];
 
-BEGIN {
-  $local_lib_root = rel2abs( $ARGV[ 0 ] );
+# need to prepend local library path to locate ExtUtils::MakeMaker::CPANfile
+# and other configure related modules
+lib->import( $local_lib ) if defined $local_lib;
 
-  $local_bin = catfile( $local_lib_root, qw( bin ) );
-
-  $local_lib_rel = catdir( $ARGV[ 0 ], qw( lib perl5 ) );
-  $local_lib     = rel2abs( $local_lib_rel );
-  # need to prepend local library path to locate ExtUtils::MakeMaker::CPANfile
-  # and other configure related modules
-  lib->import( $local_lib );
-
-  $t_lib_rel = catdir( qw( t lib ) );
-
-  $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) )
-}
-
-# do not use "local" in the following line because then _which() will no see
-# the modified PATH
-if ( exists $ENV{ PATH } ) {
-  $ENV{ PATH } = "$local_bin$Config{ path_sep }$ENV{ PATH }" ## no critic (RequireLocalizedPunctuationVars)
-    unless grep { $local_bin eq $_ } split $Config{ path_sep }, $ENV{ PATH };
-} else {
-  $ENV{ PATH } = $local_bin; ## no critic (RequireLocalizedPunctuationVars)
+if ( defined $local_bin ) {
+  # do not use "local" in the following line because then _which() will no see
+  # the modified PATH
+  if ( exists $ENV{ PATH } ) {
+    $ENV{ PATH } = "$local_bin$Config{ path_sep }$ENV{ PATH }" ## no critic (RequireLocalizedPunctuationVars)
+      unless grep { $local_bin eq $_ } split $Config{ path_sep }, $ENV{ PATH };
+  } else {
+    $ENV{ PATH } = $local_bin; ## no critic (RequireLocalizedPunctuationVars)
+  }
 }
 
 # https://metacpan.org/pod/ExtUtils::MakeMaker#Overriding-MakeMaker-Methods
@@ -56,7 +46,7 @@ sub dist_test {
   my ( $self ) = @_;
 
   my $inherited = $self->SUPER::dist_test;
-  $inherited =~ s/^(disttest ?:.+)$/$1\n\t\$(CP) -R $local_lib_root \$(DISTVNAME)/m;
+  $inherited =~ s/^(disttest ?:.+)$/$1\n\t\$(CP) -R $local_lib_root \$(DISTVNAME)/m if defined $local_lib_root;
   $inherited =~ s/( test )/$1RELEASE_TESTING=1 /m;
   $inherited
 }
@@ -147,6 +137,27 @@ sub _which ( $ ) {
   }
 
   undef
+}
+
+sub _local ( $ ) {
+  my ( $arg ) = @_;
+
+  my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ); ## no critic (ProhibitReusedNames)
+
+  if ( -d $arg ) {
+    $local_lib_root = rel2abs( $arg );
+
+    $local_bin = catfile( $local_lib_root, qw( bin ) );
+
+    $local_lib_rel = catdir( $arg, qw( lib perl5 ) );
+    $local_lib     = rel2abs( $local_lib_rel );
+  }
+
+  $t_lib_rel = catdir( qw( t lib ) );
+
+  $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) );
+
+  ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file )
 }
 
 1

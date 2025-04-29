@@ -8,7 +8,7 @@ BEGIN {
   # pass cpm's default --local-lib-contained DIR to the required MY module using
   # the localized first element of @ARGV
   local $ARGV[ 0 ] = 'local';
-  require &rel2abs( catfile( -d $ARGV[ 0 ] ? 'maint' : curdir, 'MY.pm' ) )
+  require &rel2abs( catfile( qw( maint MY.pm ) ) )
 }
 
 use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
