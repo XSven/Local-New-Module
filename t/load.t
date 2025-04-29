@@ -5,7 +5,7 @@ use Test::More import => [ qw( BAIL_OUT note plan use_ok ) ];
 
 use Config qw( %Config );
 
-my @module = qw( Local::New::Module );
+my @module = qw( Local::New::Module Local::Test );
 
 # https://metacpan.org/pod/perlsecret#Venus
 # Venus operator ("0+") that does numification
