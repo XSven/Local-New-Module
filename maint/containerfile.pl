@@ -3,7 +3,7 @@ use warnings;
 
 our ( $Tardist, $Distvname, $Inst_archlib, $Inst_lib, $Local_lib_rel, $Exe_file ); ## no critic (ProhibitPackageVars)
 
-print STDOUT <<"DOCKERFILE"
+print STDOUT <<"CONTAINERFILE"
 FROM docker.io/library/perl:5.38.3-bookworm
 WORKDIR /opt
 ADD ${Tardist} .
@@ -21,4 +21,4 @@ RUN [ "perl", "Makefile.PL" ]
 # build
 RUN [ "make" ]
 ENTRYPOINT [ "perl", "-I${Inst_archlib}", "-I${Inst_lib}", "-I${Local_lib_rel}", "${Exe_file}" ]
-DOCKERFILE
+CONTAINERFILE

@@ -59,7 +59,7 @@ if ( defined $local_lib_rel ) {
 
     "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
       . rel2abs( catfile( qw( maint runtests.pl ) ) )
-      . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel $tests\n"
+      . " \$(TEST_VERBOSE) \$(INST_ARCHLIB) \$(INST_LIB) \"$t_lib_rel\" \"$local_lib_rel\" $tests\n"
   };
 
   # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
@@ -151,7 +151,9 @@ sub _local ( $ ) {
 
   my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ); ## no critic (ProhibitReusedNames)
 
-  if ( -d $arg ) {
+  # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#automated_testing
+  # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md#environment-variables-for-testing-contexts
+  if ( not $ENV{ AUTOMATED_TESTING } and -d $arg ) {
     $local_lib_root = rel2abs( $arg );
 
     $local_bin = catfile( $local_lib_root, qw( bin ) );
