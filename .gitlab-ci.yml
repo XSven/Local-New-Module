@@ -1,0 +1,75 @@
+variables:
+  DARKPAN_REPO_URL: "http://ib-dev-mojo-darkpan.int.kn:8080/publish"
+
+stages:
+  - configure
+  - dist
+  - check
+  - publish
+
+configure:
+  stage: configure
+  before_script:
+   - export HTTPS_PROXY=http://kn.proxy.int.kn:80
+   - cpm  install  --test --with-configure --without-test --without-develop --without-runtime --local-lib-contained ./local
+  script:
+    - export BUILD_NUMBER="$CI_PIPELINE_ID"
+    - perl Makefile.PL verbose
+  rules:
+  - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "development"'
+
+dist:
+  stage: dist
+  script:
+    - make dist
+  artifacts:
+    paths:
+      - '*.tar.gz'
+  variables:
+    GIT_STRATEGY: "none"
+  rules:
+  - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "development"'
+
+check_artifact:
+  stage: check
+  variables:
+    GIT_STRATEGY: "none"
+  script:
+    - |
+      if ls *.tar.gz 1> /dev/null 2>&1; then
+        echo " .tar.gz file found."
+      else
+        echo " No .tar.gz file found."
+        exit 1
+      fi
+  rules:
+  - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "development"'
+
+publish:
+  stage: publish
+  variables:
+    GIT_STRATEGY: "none"
+  rules:
+  - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "development"'
+  script: |
+    #!/bin/bash
+    
+    # Extract the email address
+    # Get the local part of the email (before @)
+    # Split the local part into first name and second name
+    # Convert to uppercase
+    # Take first 2 characters of the first name
+    # Concatenate and print
+    artificialPauseId=$(
+      perl -Mstrict -Mwarnings -e '
+        my ( $first, $second ) = map { uc } ( $ARGV[0] =~ m/ < ([^.@]+) \. ([^.@]+) /x );
+        print substr( $first, 0, 2 ), $second
+      ' "$CI_COMMIT_AUTHOR"
+    )
+
+    # Find .tar.gz files and store their names in the variable
+    distName=$(find . -type f -name "*.tar.gz" -exec basename {} \;)
+
+    # Traced publish call to DarkPAN web server
+    set -x 
+    curl -s -F "author=$artificialPauseId" -F "pause99_add_uri_httpupload=@$distName" $DARKPAN_REPO_URL

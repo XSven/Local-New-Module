@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Carp                  qw( croak );
-use File::Spec::Functions qw( catfile curdir rel2abs );
+use File::Spec::Functions qw( catfile rel2abs );
 
 BEGIN {
   # pass cpm's default --local-lib-contained DIR to the required MY module using
