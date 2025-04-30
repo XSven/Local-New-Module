@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use ExtUtils::Command     qw();
-use File::Spec::Functions qw( rel2abs );
+use File::Spec::Functions qw( file_name_is_absolute rel2abs );
 use Test::Harness         qw( runtests );
 use List::Util            qw( shuffle );
 use lib                   qw();
@@ -15,6 +15,6 @@ my @test_files = @ARGV;
 # https://metacpan.org/pod/lib#Restoring-original-@INC
 local @INC = @lib::ORIG_INC;
 # don't use lib::import because Test::Harness::runtests does this implicitly
-unshift @INC, map { rel2abs( $_ ) } @inc;
+unshift @INC, map { file_name_is_absolute( $_ ) ? () : rel2abs( $_ ) } @inc;
 
 runtests( shuffle( ExtUtils::Command::expand_wildcards( @test_files ) ) )
