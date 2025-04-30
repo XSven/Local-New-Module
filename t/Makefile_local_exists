@@ -936,7 +936,7 @@ test_ : test_dynamic
 subdirs-test_dynamic :: dynamic pure_all
 
 test_dynamic :: subdirs-test_dynamic
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl $(TEST_VERBOSE) $(INST_ARCHLIB) $(INST_LIB) "t/lib" "local/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "local/lib/perl5" $(TEST_FILES)
 
 testdb_dynamic :: dynamic pure_all
 	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-It/lib" "-Ilocal/lib/perl5" $(TEST_FILE)
@@ -944,7 +944,7 @@ testdb_dynamic :: dynamic pure_all
 subdirs-test_static :: static pure_all
 
 test_static :: subdirs-test_static
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl $(TEST_VERBOSE) $(INST_ARCHLIB) $(INST_LIB) "t/lib" "local/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "local/lib/perl5" $(TEST_FILES)
 
 testdb_static :: static pure_all
 	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-It/lib" "-Ilocal/lib/perl5" $(TEST_FILE)
