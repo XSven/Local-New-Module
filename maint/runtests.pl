@@ -8,7 +8,7 @@ use List::Util            qw( shuffle );
 use lib                   qw();
 
 $Test::Harness::verbose = shift; ## no critic (Variables::ProhibitPackageVars)
-my @inc        = splice @ARGV, 0, 4;
+my @inc        = grep { $_ ne '' } splice @ARGV, 0, 4;
 my @test_files = @ARGV;
 
 # restore default/original @INC
