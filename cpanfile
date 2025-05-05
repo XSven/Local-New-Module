@@ -10,6 +10,9 @@ on configure => sub { };
 
 on runtime => sub { };
 
-on test => sub { };
+on test => sub {
+  requires 'Test::Deep'    => '0';
+  requires 'Sub::Override' => '0'
+};
 
 on develop => sub { }

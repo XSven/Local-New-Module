@@ -8,8 +8,9 @@ use List::Util            qw( shuffle );
 use lib                   qw();
 
 $Test::Harness::verbose = shift; ## no critic (Variables::ProhibitPackageVars)
-my @inc        = grep { $_ ne '' } splice @ARGV, 0, 4;
-my @test_files = @ARGV;
+my $number_of_libs = shift;
+my @inc            = grep { $_ ne '' } splice @ARGV, 0, $number_of_libs;
+my @test_files     = @ARGV;
 
 # restore default/original @INC
 # https://metacpan.org/pod/lib#Restoring-original-@INC

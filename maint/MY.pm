@@ -59,7 +59,7 @@ if ( defined $local_lib_rel ) {
 
     "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
       . rel2abs( catfile( qw( maint runtests.pl ) ) )
-      . " \"\$(TEST_VERBOSE)\" \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" \"$local_lib_rel\" $tests\n"
+      . " \"\$(TEST_VERBOSE)\" 4 \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" \"$local_lib_rel\" $tests\n"
   };
 
   # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
