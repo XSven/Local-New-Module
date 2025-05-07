@@ -50,17 +50,21 @@ sub dist_test {
   $inherited
 }
 
+# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
+sub test_via_harness {
+  my ( $self, $perl, $tests ) = @_;
+
+  my @extra_libs     = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/, $ENV{ PERL5LIB };
+  my $extra_libs     = @extra_libs ? '"' . join( '" "', @extra_libs ) . '"' : '';
+  my $number_of_libs = 3 + @extra_libs;
+
+  "\tPERL_DL_NONLAZY=1 $perl ${ \( defined $local_lib ? \"-Mlib=$local_lib\" : '' ) } "
+    . rel2abs( catfile( qw( maint runtests.pl ) ) )
+    . " \"\$(TEST_VERBOSE)\" $number_of_libs \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" $extra_libs $tests\n"
+}
+
 if ( defined $local_lib_rel ) {
   no warnings 'once'; ## no critic (ProhibitNoWarnings)
-
-  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
-  *test_via_harness = sub {
-    my ( $self, $perl, $tests ) = @_;
-
-    "\tPERL_DL_NONLAZY=1 $perl ${ \( defined $local_lib ? \"-Mlib=$local_lib\" : '' ) } "
-      . rel2abs( catfile( qw( maint runtests.pl ) ) )
-      . " \"\$(TEST_VERBOSE)\" 4 \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" \"$local_lib_rel\" $tests\n"
-  };
 
   # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
   *test_via_script = sub {
@@ -77,7 +81,7 @@ sub postamble {
 
   my $make_fragment = '';
 
-  $make_fragment .= <<"MAKE_FRAGMENT" if defined $local_lib_root;
+  $make_fragment .= <<"MAKE_FRAGMENT";
 export PATH := $ENV{ PATH }
 undefine PERL5LIB
 MAKE_FRAGMENT
@@ -151,8 +155,8 @@ sub _local ( $ ) {
 
   my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ); ## no critic (ProhibitReusedNames)
 
-  # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#automated_testing
-  # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md#environment-variables-for-testing-contexts
+# https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#automated_testing
+# https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md#environment-variables-for-testing-contexts
   if ( not $ENV{ AUTOMATED_TESTING } and -d $arg ) {
     $local_lib_root = rel2abs( $arg );
 

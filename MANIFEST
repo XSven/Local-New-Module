@@ -19,7 +19,7 @@ t/basic.t
 t/critic.t
 t/lib/Local/Test.pm
 t/load.t
-t/Makefile_local_exists
-t/Makefile_local_not_exists
+t/Makefile_local_not_used
+t/Makefile_local_used
 t/pod.t
 t/runtests.t
