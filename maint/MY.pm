@@ -55,7 +55,8 @@ sub dist_test {
 sub test_via_harness {
   my ( $self, $perl, $tests ) = @_;
 
-  my @extra_libs     = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/, $ENV{ PERL5LIB };
+  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/,
+    ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs     = @extra_libs ? '"' . join( '" "', @extra_libs ) . '"' : '';
   my $number_of_libs = 3 + @extra_libs;
 
@@ -69,7 +70,8 @@ sub test_via_harness {
 sub test_via_script {
   my ( $self, $perl, $tests ) = @_;
 
-  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/, $ENV{ PERL5LIB };
+  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/,
+    ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs = @extra_libs ? '"-I' . join( '" "-I', @extra_libs ) . '"' : '';
 
   "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" $extra_libs $tests\n"
