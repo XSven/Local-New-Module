@@ -50,6 +50,7 @@ sub dist_test {
   $inherited
 }
 
+# test_* PHONY targets
 # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_harness-(override)
 sub test_via_harness {
   my ( $self, $perl, $tests ) = @_;
@@ -63,16 +64,15 @@ sub test_via_harness {
     . " \"\$(TEST_VERBOSE)\" $number_of_libs \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" $extra_libs $tests\n"
 }
 
-if ( defined $local_lib_rel ) {
-  no warnings 'once'; ## no critic (ProhibitNoWarnings)
+# testdb_* PHONY targets
+# https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
+sub test_via_script {
+  my ( $self, $perl, $tests ) = @_;
 
-  # https://metacpan.org/pod/ExtUtils::MM_Unix#test_via_script-(override)
-  *test_via_script = sub {
-    my ( $self, $perl, $tests ) = @_;
+  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/, $ENV{ PERL5LIB };
+  my $extra_libs = @extra_libs ? '"-I' . join( '" "-I', @extra_libs ) . '"' : '';
 
-    "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" \"-I$local_lib_rel\" $tests\n"
-  }
-
+  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" $extra_libs $tests\n"
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
