@@ -57,7 +57,7 @@ if ( defined $local_lib_rel ) {
   *test_via_harness = sub {
     my ( $self, $perl, $tests ) = @_;
 
-    "\tPERL_DL_NONLAZY=1 $perl -Mlib=$local_lib "
+    "\tPERL_DL_NONLAZY=1 $perl ${ \( defined $local_lib ? \"-Mlib=$local_lib\" : '' ) } "
       . rel2abs( catfile( qw( maint runtests.pl ) ) )
       . " \"\$(TEST_VERBOSE)\" 4 \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" \"$local_lib_rel\" $tests\n"
   };
