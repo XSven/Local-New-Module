@@ -160,9 +160,7 @@ sub _local ( $ ) {
 
   my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel ); ## no critic (ProhibitReusedNames)
 
-# https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#automated_testing
-# https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md#environment-variables-for-testing-contexts
-  if ( not $ENV{ AUTOMATED_TESTING } and -d $arg ) {
+  if ( -d $arg ) {
     $local_lib_root = rel2abs( $arg );
 
     $local_bin = catfile( $local_lib_root, qw( bin ) );
