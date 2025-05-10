@@ -11,7 +11,8 @@ use File::Basename        qw( basename );
 use File::Spec::Functions qw( catdir catfile rel2abs );
 use Module::Loaded        qw( is_loaded );
 
-my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel ) = _local $ARGV[ 0 ];
+my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib ) = _local $ARGV[ 0 ];
+my $t_lib = rel2abs( catdir( qw( t lib ) ) );
 
 # need to prepend local library path to locate ExtUtils::MakeMaker::CPANfile
 # and other configure related modules
@@ -62,7 +63,7 @@ sub test_via_harness {
 
   "\tPERL_DL_NONLAZY=1 $perl ${ \( defined $local_lib ? \"-Mlib=$local_lib\" : '' ) } "
     . rel2abs( catfile( qw( maint runtests.pl ) ) )
-    . " \"\$(TEST_VERBOSE)\" $number_of_libs \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib_rel\" $extra_libs $tests\n"
+    . " \"\$(TEST_VERBOSE)\" $number_of_libs \"\$(INST_ARCHLIB)\" \"\$(INST_LIB)\" \"$t_lib\" $extra_libs $tests\n"
 }
 
 # testdb_* PHONY targets
@@ -70,11 +71,12 @@ sub test_via_harness {
 sub test_via_script {
   my ( $self, $perl, $tests ) = @_;
 
+  # TODO: make $t_lib an extra lib and apply -d check on all extra libs
   my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/,
     ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs = @extra_libs ? '"-I' . join( '" "-I', @extra_libs ) . '"' : '';
 
-  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib_rel\" $extra_libs $tests\n"
+  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib\" $extra_libs $tests\n"
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
@@ -96,18 +98,6 @@ testlm:
 	\$(NOECHO) \$(MAKE) TEST_FILES=\$\$(perl -e 'print STDOUT ( sort { -M \$\$a > -M \$\$b } glob( "\$\$ARGV[0]" ) )[0]' '\$(TEST_FILES)') test
 MAKE_FRAGMENT
 
-  $make_fragment .= <<"MAKE_FRAGMENT" if defined $local_lib_rel;
-
-# runs test scripts without a harness
-# https://www.perlmonks.org/?node_id=1035633 (Directory Separator)
-# apply catfile() based trailing slash ('/') directory separator hack
-.PHONY: testn
-testn: pure_all
-	\$(NOECHO) for test_script in \$(TEST_FILES); do \\
-	  \$(FULLPERLRUN) \$(foreach lib_rel,\$(INST_ARCHLIB) \$(INST_LIB) $t_lib_rel $local_lib_rel,-I${ \( catfile( rel2abs, '' ) ) }\$(lib_rel)) \$\${test_script};\\
-	done
-MAKE_FRAGMENT
-
   my $prove = _which 'prove';
   if ( defined $prove and defined $local_lib_rel ) {
     my $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) );
@@ -117,7 +107,7 @@ MAKE_FRAGMENT
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#\@INC
 .PHONY: testp
 testp: pure_all
-	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file"  : '' ) } --blib -I$t_lib_rel -I$local_lib_rel -w --recurse --shuffle \$(TEST_FILES)
+	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file" : '' ) } --blib${ \( -d $t_lib  ? " -I$t_lib" : '' ) } -I$local_lib_rel -w --recurse --shuffle \$(TEST_FILES)
 MAKE_FRAGMENT
   }
 
@@ -158,7 +148,7 @@ sub _which ( $ ) {
 sub _local ( $ ) {
   my ( $arg ) = @_;
 
-  my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel ); ## no critic (ProhibitReusedNames)
+  my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib ); ## no critic (ProhibitReusedNames)
 
   if ( -d $arg ) {
     $local_lib_root = rel2abs( $arg );
@@ -169,9 +159,7 @@ sub _local ( $ ) {
     $local_lib     = rel2abs( $local_lib_rel );
   }
 
-  $t_lib_rel = catdir( qw( t lib ) );
-
-  ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel )
+  ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib )
 }
 
 1

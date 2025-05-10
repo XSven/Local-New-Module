@@ -16,6 +16,6 @@ my @test_files     = @ARGV;
 # https://metacpan.org/pod/lib#Restoring-original-@INC
 local @INC = @lib::ORIG_INC;
 # don't use lib::import because Test::Harness::runtests does this implicitly
-unshift @INC, map { file_name_is_absolute( $_ ) ? $_ : rel2abs( $_ ) } @inc;
+unshift @INC, grep { -d } map { file_name_is_absolute( $_ ) ? $_ : rel2abs( $_ ) } @inc;
 
 runtests( shuffle( ExtUtils::Command::expand_wildcards( @test_files ) ) )
