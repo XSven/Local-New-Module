@@ -19,7 +19,6 @@ before executing all test scripts
 
   make test   # using Test::Harness (recursive and random)
   make testp  # using TAP::Harness  (recursive and random)
-  make testn  # using no harness    (recursive)
 
 Adding the command-line macro definition
 

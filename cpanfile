@@ -11,6 +11,7 @@ on configure => sub { };
 on runtime => sub { };
 
 on test => sub {
+  requires 'File::Temp'    => '0';
   requires 'Test::Deep'    => '0';
   requires 'Sub::Override' => '0'
 };
