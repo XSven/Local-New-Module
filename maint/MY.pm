@@ -11,7 +11,7 @@ use File::Basename        qw( basename );
 use File::Spec::Functions qw( catdir catfile rel2abs );
 use Module::Loaded        qw( is_loaded );
 
-my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ) = _local $ARGV[ 0 ];
+my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel ) = _local $ARGV[ 0 ];
 
 # need to prepend local library path to locate ExtUtils::MakeMaker::CPANfile
 # and other configure related modules
@@ -109,7 +109,9 @@ testn: pure_all
 MAKE_FRAGMENT
 
   my $prove = _which 'prove';
-  $make_fragment .= <<"MAKE_FRAGMENT" if defined $prove and defined $local_lib_rel;
+  if ( defined $prove and defined $local_lib_rel ) {
+    my $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) );
+    $make_fragment .= <<"MAKE_FRAGMENT";
 
 # runs test scripts through TAP::Harness (prove) instead of Test::Harness (ExtUtils::MakeMaker)
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#\@INC
@@ -117,6 +119,7 @@ MAKE_FRAGMENT
 testp: pure_all
 	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file"  : '' ) } --blib -I$t_lib_rel -I$local_lib_rel -w --recurse --shuffle \$(TEST_FILES)
 MAKE_FRAGMENT
+  }
 
   my $cover = _which 'cover';
   $make_fragment .= <<"MAKE_FRAGMENT" if defined $cover and defined $local_lib_root;
@@ -155,7 +158,7 @@ sub _which ( $ ) {
 sub _local ( $ ) {
   my ( $arg ) = @_;
 
-  my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file ); ## no critic (ProhibitReusedNames)
+  my ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel ); ## no critic (ProhibitReusedNames)
 
 # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md#automated_testing
 # https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md#environment-variables-for-testing-contexts
@@ -170,9 +173,7 @@ sub _local ( $ ) {
 
   $t_lib_rel = catdir( qw( t lib ) );
 
-  $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) );
-
-  ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel, $prove_rc_file )
+  ( $local_lib_root, $local_bin, $local_lib_rel, $local_lib, $t_lib_rel )
 }
 
 1
