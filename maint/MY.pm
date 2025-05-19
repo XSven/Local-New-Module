@@ -112,11 +112,13 @@ MAKE_FRAGMENT
   }
 
   my $cover = _which 'cover';
-  $make_fragment .= <<"MAKE_FRAGMENT" if defined $cover and defined $local_lib_root;
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $cover and defined $local_lib;
 
 .PHONY: cover
 cover:
-	\$(NOECHO) $cover -test -ignore ${ \( basename( $local_lib_root ) ) } -report vim
+	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $cover -delete
+	\$(NOECHO) HARNESS_PERL_SWITCHES=-MDevel::Cover \$(MAKE) test
+	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $cover -select_re '\\A(?:blib|maint)/.*\\.pm|\\Amaint/.*\\.pl' -coverage statement -coverage branch -coverage condition -coverage subroutine -report vim
 MAKE_FRAGMENT
 
   my $podman = _which 'podman';
