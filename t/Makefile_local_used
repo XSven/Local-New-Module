@@ -22,8 +22,8 @@
 #     META_MERGE => { dynamic_config=>q[0], meta-spec=>{ version=>q[2] }, prereqs=>{  }, provides=>{ Local::New::Module=>{ file=>q[lib/Local/New/Module.pm], version=>q[1.0.0] } }, release_status=>q[unstable], resources=>{ bugtracker=>{ web=>q[https://github.com/XSven/Local-New-Module/issues] }, repository=>{ type=>q[git], url=>q[git://github.com/XSven/Local-New-Module.git], web=>q[https://github.com/XSven/Local-New-Module] } } }
 #     MIN_PERL_VERSION => q[5.014004]
 #     NAME => q[Local::New::Module]
-#     PREREQ_PM => { Carp=>q[1.32], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005], strict=>q[0], version=>q[0.9915], warnings=>q[0] }
-#     TEST_REQUIRES => { List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005] }
+#     PREREQ_PM => { Carp=>q[1.32], File::Temp=>q[0], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005], strict=>q[0], version=>q[0.9915], warnings=>q[0] }
+#     TEST_REQUIRES => { File::Temp=>q[0], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005] }
 #     VERSION_FROM => q[lib/Local/New/Module.pm]
 #     clean => { FILES=>q[Local-New-Module* cover_db] }
 #     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz], TARFLAGS=>q[cf] }
@@ -516,6 +516,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  - '\''Sven Willenbuecher <sven.willenbuecher@kuehne-nagel.com>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  ExtUtils::MakeMaker: '\''0'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) '  File::Temp: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  List::Util: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Sub::Override: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Test::API: '\''0'\''' >> META_new.yml
@@ -620,6 +621,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      },' >> META_new.json
 	$(NOECHO) $(ECHO) '      "test" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '         "requires" : {' >> META_new.json
+	$(NOECHO) $(ECHO) '            "File::Temp" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "List::Util" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Sub::Override" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Test::API" : "0",' >> META_new.json
@@ -940,18 +942,18 @@ test_ : test_dynamic
 subdirs-test_dynamic :: dynamic pure_all
 
 test_dynamic :: subdirs-test_dynamic
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "local/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5" $(TEST_FILES)
 
 testdb_dynamic :: dynamic pure_all
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-It/lib" "-Ilocal/lib/perl5" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5" $(TEST_FILE)
 
 subdirs-test_static :: static pure_all
 
 test_static :: subdirs-test_static
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "local/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) -Mlib=/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5" $(TEST_FILES)
 
 testdb_static :: static pure_all
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-It/lib" "-Ilocal/lib/perl5" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5" $(TEST_FILE)
 
 
 
@@ -1006,29 +1008,22 @@ undefine PERL5LIB
 testlm:
 	$(NOECHO) $(MAKE) TEST_FILES=$$(perl -e 'print STDOUT ( sort { -M $$a > -M $$b } glob( "$$ARGV[0]" ) )[0]' '$(TEST_FILES)') test
 
-# runs test scripts without a harness
-# https://www.perlmonks.org/?node_id=1035633 (Directory Separator)
-# apply catfile() based trailing slash ('/') directory separator hack
-.PHONY: testn
-testn: pure_all
-	$(NOECHO) for test_script in $(TEST_FILES); do \
-	  $(FULLPERLRUN) $(foreach lib_rel,$(INST_ARCHLIB) $(INST_LIB) t/lib local/lib/perl5,-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/$(lib_rel)) $${test_script};\
-	done
-
 # runs test scripts through TAP::Harness (prove) instead of Test::Harness (ExtUtils::MakeMaker)
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#@INC
 .PHONY: testp
 testp: pure_all
-	$(NOECHO) $(FULLPERLRUN) -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/bin/prove$(if $(TEST_VERBOSE:0=), --verbose) --norc --blib -It/lib -Ilocal/lib/perl5 -w --recurse --shuffle $(TEST_FILES)
+	$(NOECHO) $(FULLPERLRUN) -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/bin/prove$(if $(TEST_VERBOSE:0=), --verbose) --norc --blib -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 -w --recurse --shuffle $(TEST_FILES)
 
 .PHONY: cover
 cover:
-	$(NOECHO) /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/bin/cover -test -ignore local -report vim
+	$(NOECHO) $(FULLPERLRUN) -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/bin/cover -delete
+	$(NOECHO) HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
+	$(NOECHO) $(FULLPERLRUN) -I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/lib/perl5 /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/local/bin/cover -select_re '\A(?:blib|maint)/.*\.pm|\Amaint/.*\.pl' -coverage statement -coverage branch -coverage condition -coverage subroutine -report vim
 
 .PHONY: imagebuild
 imagebuild: distcheck dist
 	$(NOECHO) $(FULLPERLRUN) -s /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/containerfile.pl -Tardist=$(DISTVNAME).tar$(SUFFIX) -Distvname=$(DISTVNAME) -Inst_archlib=$(INST_ARCHLIB) -Inst_lib=$(INST_LIB) -Local_lib_rel=local/lib/perl5 -Exe_file=$(INST_SCRIPT)$(DFSEP)$(notdir $(EXE_FILES)) | \
-	/usr/bin/podman image build --no-cache --env FULL_NAME="$(FULL_NAME)" --env EMAIL=$(EMAIL) --tag $(notdir $(EXE_FILES)):$(VERSION) --file - .
+	/usr/bin/podman image build --no-cache --env FULL_NAME="$(FULL_NAME)" --env EMAIL="$(EMAIL)" --tag $(notdir $(EXE_FILES)):$(VERSION) --file - .
 
 
 

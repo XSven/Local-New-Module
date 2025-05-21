@@ -56,7 +56,7 @@ sub dist_test {
 sub test_via_harness {
   my ( $self, $perl, $tests ) = @_;
 
-  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/,
+  my @extra_libs = defined $local_lib ? ( $local_lib ) : split /$Config{ path_sep }/,
     ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs     = @extra_libs ? '"' . join( '" "', @extra_libs ) . '"' : '';
   my $number_of_libs = 3 + @extra_libs;
@@ -72,7 +72,7 @@ sub test_via_script {
   my ( $self, $perl, $tests ) = @_;
 
   # TODO: make $t_lib an extra lib and apply -d check on all extra libs
-  my @extra_libs = defined $local_lib ? ( $local_lib_rel ) : split /$Config{ path_sep }/,
+  my @extra_libs = defined $local_lib ? ( $local_lib ) : split /$Config{ path_sep }/,
     ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs = @extra_libs ? '"-I' . join( '" "-I', @extra_libs ) . '"' : '';
 
@@ -99,7 +99,7 @@ testlm:
 MAKE_FRAGMENT
 
   my $prove = _which 'prove';
-  if ( defined $prove and defined $local_lib_rel ) {
+  if ( defined $prove and defined $local_lib ) {
     my $prove_rc_file = rel2abs( catfile( qw( t .proverc ) ) );
     $make_fragment .= <<"MAKE_FRAGMENT";
 
@@ -107,7 +107,7 @@ MAKE_FRAGMENT
 # https://metacpan.org/dist/Test-Harness/view/bin/prove#\@INC
 .PHONY: testp
 testp: pure_all
-	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file" : '' ) } --blib${ \( -d $t_lib  ? " -I$t_lib" : '' ) } -I$local_lib_rel -w --recurse --shuffle \$(TEST_FILES)
+	\$(NOECHO) \$(FULLPERLRUN) -I$local_lib $prove\$(if \$(TEST_VERBOSE:0=), --verbose) --norc${ \( -f $prove_rc_file ? " --rc $prove_rc_file" : '' ) } --blib${ \( -d $t_lib  ? " -I$t_lib" : '' ) } -I$local_lib -w --recurse --shuffle \$(TEST_FILES)
 MAKE_FRAGMENT
   }
 
