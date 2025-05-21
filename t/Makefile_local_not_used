@@ -22,8 +22,8 @@
 #     META_MERGE => { dynamic_config=>q[0], meta-spec=>{ version=>q[2] }, prereqs=>{  }, provides=>{ Local::New::Module=>{ file=>q[lib/Local/New/Module.pm], version=>q[1.0.0] } }, release_status=>q[unstable], resources=>{ bugtracker=>{ web=>q[https://github.com/XSven/Local-New-Module/issues] }, repository=>{ type=>q[git], url=>q[git://github.com/XSven/Local-New-Module.git], web=>q[https://github.com/XSven/Local-New-Module] } } }
 #     MIN_PERL_VERSION => q[5.014004]
 #     NAME => q[Local::New::Module]
-#     PREREQ_PM => { Carp=>q[1.32], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005], strict=>q[0], version=>q[0.9915], warnings=>q[0] }
-#     TEST_REQUIRES => { List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005] }
+#     PREREQ_PM => { Carp=>q[1.32], File::Temp=>q[0], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005], strict=>q[0], version=>q[0.9915], warnings=>q[0] }
+#     TEST_REQUIRES => { File::Temp=>q[0], List::Util=>q[0], Sub::Override=>q[0], Test::API=>q[0], Test::Deep=>q[0], Test::Fatal=>q[0], Test::Harness=>q[3.50], Test::More=>q[1.001005] }
 #     VERSION_FROM => q[lib/Local/New/Module.pm]
 #     clean => { FILES=>q[Local-New-Module* cover_db] }
 #     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz], TARFLAGS=>q[cf] }
@@ -516,6 +516,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  - '\''Sven Willenbuecher <sven.willenbuecher@kuehne-nagel.com>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  ExtUtils::MakeMaker: '\''0'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) '  File::Temp: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  List::Util: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Sub::Override: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Test::API: '\''0'\''' >> META_new.yml
@@ -620,6 +621,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      },' >> META_new.json
 	$(NOECHO) $(ECHO) '      "test" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '         "requires" : {' >> META_new.json
+	$(NOECHO) $(ECHO) '            "File::Temp" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "List::Util" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Sub::Override" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Test::API" : "0",' >> META_new.json
@@ -939,18 +941,18 @@ test_ : test_dynamic
 subdirs-test_dynamic :: dynamic pure_all
 
 test_dynamic :: subdirs-test_dynamic
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN)  /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN)  /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILES)
 
 testdb_dynamic :: dynamic pure_all
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(realpath $(INST_ARCHLIB))" "-I$(realpath $(INST_LIB))" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "-I/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILE)
 
 subdirs-test_static :: static pure_all
 
 test_static :: subdirs-test_static
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN)  /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "t/lib" "/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN)  /home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/maint/runtests.pl "$(TEST_VERBOSE)" 4 "$(INST_ARCHLIB)" "$(INST_LIB)" "/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILES)
 
 testdb_static :: static pure_all
-	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 $(FULLPERLRUN) $(TESTDB_SW) "-I$(realpath $(INST_ARCHLIB))" "-I$(realpath $(INST_LIB))" "-I/home/sven.willenbuecher/Projects/src/github.com/XSven/Local-New-Module/t/lib" "-I/home/sven.willenbuecher/perl-5.38.3/Local-New-Module-master/lib/perl5" $(TEST_FILE)
 
 
 

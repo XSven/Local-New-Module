@@ -76,7 +76,7 @@ sub test_via_script {
     ( exists $ENV{ PERL5LIB } ? $ENV{ PERL5LIB } : '' );
   my $extra_libs = @extra_libs ? '"-I' . join( '" "-I', @extra_libs ) . '"' : '';
 
-  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(INST_ARCHLIB)\" \"-I\$(INST_LIB)\" \"-I$t_lib\" $extra_libs $tests\n"
+  "\tPERL_DL_NONLAZY=1 $perl \"-I\$(realpath \$(INST_ARCHLIB))\" \"-I\$(realpath \$(INST_LIB))\" \"-I$t_lib\" $extra_libs $tests\n"
 }
 
 # https://metacpan.org/pod/ExtUtils::MM_Any#postamble-(o)
