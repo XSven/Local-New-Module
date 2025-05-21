@@ -122,7 +122,7 @@ cover:
 MAKE_FRAGMENT
 
   my $podman = _which 'podman';
-  $make_fragment .= <<"MAKE_FRAGMENT" if defined $podman and defined $local_lib_rel;
+  $make_fragment .= <<"MAKE_FRAGMENT" if defined $podman and defined $local_lib;
 
 .PHONY: imagebuild
 imagebuild: distcheck dist
