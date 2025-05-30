@@ -31,7 +31,9 @@ my %WriteMakefileArgs   = (
   AUTHOR           => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
   VERSION_FROM     => catfile( 'lib', $main_module_file ),
   ABSTRACT_FROM    => catfile( 'lib', $main_module_podfile ),
-  LICENSE          => 'Perl_5',
+  # https://metacpan.org/pod/CPAN::Meta::Spec#license
+  # another valid license string is "restricted"
+  LICENSE          => 'perl_5',
   MIN_PERL_VERSION => '5.14.4',
   # safe naming of custom arguments passed to Makefile.PL
   # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/470
