@@ -27,10 +27,10 @@ my $main_module         = join '::', @main_module_namespace;
 my $main_module_file    = catfile( @main_module_namespace ) . '.pm';
 my $main_module_podfile = catfile( @main_module_namespace ) . '.pod';
 my %WriteMakefileArgs   = (
-  NAME             => $main_module,
-  AUTHOR           => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
-  VERSION_FROM     => catfile( 'lib', $main_module_file ),
-  ABSTRACT_FROM    => catfile( 'lib', $main_module_podfile ),
+  NAME          => $main_module,
+  AUTHOR        => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
+  VERSION_FROM  => catfile( 'lib', $main_module_file ),
+  ABSTRACT_FROM => catfile( 'lib', $main_module_podfile ),
   # https://metacpan.org/pod/CPAN::Meta::Spec#license
   # another valid license string is "restricted"
   LICENSE          => 'perl_5',
@@ -60,6 +60,8 @@ my %WriteMakefileArgs   = (
       }
     }
   },
+  # check ExtUtils::MakeMaker Changes
+  NORECURS  => 1,
   clean     => { FILES                => "$distname* cover_db" },
   dist      => { TARFLAGS             => 'cf', COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
   realclean => { FILES                => 'local' },
