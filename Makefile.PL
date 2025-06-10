@@ -62,6 +62,7 @@ my %WriteMakefileArgs   = (
   },
   # check ExtUtils::MakeMaker Changes
   NORECURS  => 1,
+  PL_FILES  => {},
   PM        => { map { catfile( 'lib', $_ ) => catfile( '$(INST_LIB)', $_ ) } ( $main_module_file ) },
   clean     => { FILES                => "$distname* cover_db" },
   dist      => { TARFLAGS             => 'cf', COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
