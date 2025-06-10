@@ -62,7 +62,6 @@ my %WriteMakefileArgs   = (
   },
   # check ExtUtils::MakeMaker Changes
   NORECURS  => 1,
-  PM_FILTER => 'perl -pe "s/0\.0\.0/' . $version . '/ if m/\Aour $$VERSION/"',
   clean     => { FILES                => "$distname* cover_db" },
   dist      => { TARFLAGS             => 'cf', COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
   realclean => { FILES                => 'local' },
