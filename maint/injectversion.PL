@@ -1,3 +1,5 @@
+use strict;
+use warnings;
 # experimemtal PL_FILES config
 # PL_FILES  => { 'maint/injectversion.PL' => catfile( 'lib', $main_module_file ) },
 # unfortunately I could not figure out how to pass usual arguments ( $version ) to
