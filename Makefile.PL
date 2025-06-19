@@ -11,8 +11,8 @@ BEGIN {
   require &rel2abs( catfile( qw( maint MY.pm ) ) )
 }
 
-use ExtUtils::MakeMaker::CPANfile qw( WriteMakefile );
-use File::ShareDir::Install       qw( install_share );
+use ExtUtils::MakeMaker::CPANfile;    # do not supply an empty list because import() has to be called
+use File::ShareDir::Install qw( install_share );
 
 for ( qw( EMAIL FULL_NAME ) ) {
   croak "$_ environment variable is not set, stopped" unless exists $ENV{ $_ };
@@ -26,13 +26,13 @@ my $distname            = join '-',  @main_module_namespace;
 my $main_module         = join '::', @main_module_namespace;
 my $main_module_file    = catfile( @main_module_namespace ) . '.pm';
 my $main_module_podfile = catfile( @main_module_namespace ) . '.pod';
-my %WriteMakefileArgs   = (
+my %att                 = (
   NAME          => $main_module,
   AUTHOR        => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
   VERSION_FROM  => catfile( 'lib', $main_module_file ),
   ABSTRACT_FROM => catfile( 'lib', $main_module_podfile ),
-  # https://metacpan.org/pod/CPAN::Meta::Spec#license
   # another valid license string is "restricted"
+  # https://metacpan.org/pod/CPAN::Meta::Spec#license
   LICENSE          => 'perl_5',
   MIN_PERL_VERSION => '5.14.4',
   # safe naming of custom arguments passed to Makefile.PL
@@ -73,5 +73,16 @@ my %WriteMakefileArgs   = (
 # "dist" refers to the $(DISTNAME) macro variable
 # install_share dist => 'share';
 # install_share module => $main_module => 'share';
-no warnings qw( void );
-caller() ? \%WriteMakefileArgs : WriteMakefile( %WriteMakefileArgs )
+
+# Makefile.PL as a modulino
+# https://www.masteringperl.org/2015/01/makefile-pl-as-a-modulino/
+if ( caller() ) {
+  no warnings qw( redefine );
+  # redefine ExtUtils::MakeMaker::WriteMakefile() to echo its atributes
+  *ExtUtils::MakeMaker::WriteMakefile = sub {
+    +{ @_ }    # \%att
+  };
+  # re-trigger the ExtUtils::MakeMaker::WriteMakefile() modification
+  ExtUtils::MakeMaker::CPANfile->import
+}
+WriteMakefile( %att )
