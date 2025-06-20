@@ -5,8 +5,6 @@ use Test::More import => [ qw( BAIL_OUT note plan use_ok ) ];
 
 use Config qw( %Config );
 
-# Makefile.PL as a modulino
-# https://www.masteringperl.org/2015/01/makefile-pl-as-a-modulino/
 my $main_module = ( do './Makefile.PL' )->{ NAME };
 my @module      = ( $main_module, qw( Local::Test ) );
 
