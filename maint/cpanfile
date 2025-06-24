@@ -34,7 +34,7 @@ on test => sub {
 
 on develop => sub {
   requires 'Devel::Cover'       => '1.33';       # Fix cover -test with Build.PL
-  requires 'Perl::Tidy'         => '20250311';
+  requires 'Perl::Tidy'         => '20250616';
   requires 'Template'           => '0';
   requires 'Test::Needs'        => '0';
   requires 'Test::Perl::Critic' => '0';
