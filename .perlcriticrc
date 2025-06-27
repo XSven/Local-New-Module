@@ -6,7 +6,7 @@ verbose = %f: %m at line %l, column %c.  (Policy: %p, Severity: %s)\n
 
 [-BuiltinFunctions::ProhibitSleepViaSelect]
 # https://github.com/Perl-Critic/Perl-Critic/issues/1053
-[-Modules::RequireEndWithOne]
+[Modules::RequireEndWithOne]
 [-Modules::RequireExplicitPackage]
 [-RegularExpressions::RequireExtendedFormatting]
 [-Subroutines::ProtectPrivateSubs]
@@ -15,4 +15,6 @@ verbose = %f: %m at line %l, column %c.  (Policy: %p, Severity: %s)\n
 allow_name_regex = _(?:build|trigger)_\w+
 [-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
+# https://github.com/Perl-Critic/Perl-Critic/issues/1094
+[TestingAndDebugging::RequireTestLabels]
 [-ValuesAndExpressions::RequireInterpolationOfMetachars]
