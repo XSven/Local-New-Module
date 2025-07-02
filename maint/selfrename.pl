@@ -10,7 +10,7 @@ my $maker_file  = catfile( $project_dir, 'Makefile.PL' );
 croak "$maker_file missing in project directory, stopped"
   unless -f $maker_file;
 
-croak "Required target main module not specified, stopped" unless @ARGV;
+croak 'Required target main module not specified, stopped' unless @ARGV;
 my ( $target_main_module ) = @ARGV;
 
 my @target_main_module_namespace = split /::/, $target_main_module;
