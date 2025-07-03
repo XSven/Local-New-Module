@@ -1,8 +1,9 @@
-severity = harsh
-#severity = cruel
-#severity = brutal
-
-verbose = %f: %m at line %l, column %c.  (Policy: %p, Severity: %s)\n
+# harsh  (3)
+# cruel  (2)
+# brutal (1)
+severity           = harsh
+program-extensions = .PL .pl .t
+verbose            = %f: %m at line %l, column %c.  (Policy: %p, Severity: %s)\n
 
 [-BuiltinFunctions::ProhibitSleepViaSelect]
 # https://github.com/Perl-Critic/Perl-Critic/issues/1053
