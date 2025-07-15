@@ -8,6 +8,8 @@ my $version = '1.14.15';
 
 local $^I = '';
 while ( <ARGV> ) {
-  s/\d+\.\d+\.\d+/$version/ if m/\Aour \$VERSION/;
-  print;
+  s/\d+\.\d+\.\d+/$version/ if m/our \$VERSION/;
+  # print $_ to the currently selected output handle
+  # the currently selected output handle is ARGVOUT
+  print
 }
