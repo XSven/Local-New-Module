@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More import => [ qw( BAIL_OUT note plan use_ok ) ];
+use Test::Script qw( script_compiles );
 
 use Config qw( %Config );
 
@@ -10,7 +11,7 @@ my @module      = ( $main_module, qw( Local::Test ) );
 
 # https://metacpan.org/pod/perlsecret#Venus
 # Venus operator ("0+") that does numification
-plan tests => 0 + @module;
+plan tests => 1 + @module;
 
 note "Perl $] at $^X";
 note 'Harness ',         $ENV{ HARNESS_VERSION } if exists $ENV{ HARNESS_VERSION };
@@ -28,3 +29,5 @@ for my $module ( @module ) {
   no warnings 'uninitialized'; ## no critic (ProhibitNoWarnings)
   note "Testing $module " . $module->VERSION
 }
+
+script_compiles( 'blib/script/cli-tool' );
