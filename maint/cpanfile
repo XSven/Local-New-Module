@@ -30,7 +30,7 @@ on test => sub {
   requires 'Test::Fatal'   => '0';
   requires 'Test::Harness' => '3.50';
   requires 'Test::More'    => '1.001005';    # Subtests accept args
-  requires 'Test::Script'  => '0'
+  requires 'Test::Script'  => '1.09'
 };
 
 on develop => sub {
