@@ -5,8 +5,12 @@ use Test::More import => [ qw( BAIL_OUT note plan use_ok ) ];
 
 use Config qw( %Config );
 
-my $main_module = ( do './Makefile.PL' )->{ NAME };
-my @module      = ( $main_module, "$main_module\::CLI", qw( Local::Test ) );
+my $main_module;
+{
+  local @INC = @INC;
+  $main_module = ( do './Makefile.PL' )->{ NAME };
+}
+my @module = ( $main_module, "$main_module\::CLI", qw( Local::Test ) );
 
 # https://metacpan.org/pod/perlsecret#Venus
 # Venus operator ("0+") that does numification
