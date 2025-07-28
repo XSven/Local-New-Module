@@ -47,6 +47,10 @@ my %att                 = (
       $main_module => {
         file    => catfile( 'lib', $main_module_file ),
         version => $version
+      },
+      "$main_module\::CLI" => {
+        file    => catfile( 'lib', @main_module_namespace, 'CLI' ) . '.pm',
+        version => $version
       }
     },
     resources => {
@@ -61,9 +65,12 @@ my %att                 = (
     }
   },
   # check ExtUtils::MakeMaker Changes
-  NORECURS  => 1,
-  PL_FILES  => {},
-  PM        => { map { catfile( 'lib', $_ ) => catfile( '$(INST_LIB)', $_ ) } ( $main_module_file ) },
+  NORECURS => 1,
+  PL_FILES => {},
+  PM       => {
+    map { catfile( 'lib', $_ ) => catfile( '$(INST_LIB)', $_ ) }
+      ( $main_module_file, catfile( @main_module_namespace, 'CLI' ) . '.pm' )
+  },
   clean     => { FILES                => "$distname* cover_db" },
   dist      => { TARFLAGS             => 'cf', COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
   realclean => { FILES                => 'local' },
