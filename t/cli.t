@@ -1,13 +1,13 @@
 use strict;
 use warnings;
 
-use Test::More import => [ qw( ) ], tests => 3;
-use Test::Script qw( script_compiles );
+use Test::Script tests => 5;
 
 use File::Basename qw( basename );
-use POSIX          qw( EXIT_SUCCESS );
 
 my $script = 'blib/script/cli-tool';
 script_compiles( $script );
-script_runs( [ $script, '-V' ], { exit => EXIT_SUCCESS }, "Script $script runs with -V" );
-script_stdout_is basename( $script ) . " 1.0.0\n", 'Show version'
+script_runs( [ $script, '-V' ], "Script $script runs with -V" );
+script_stdout_is basename( $script ) . " 1.0.0\n", 'Show version';
+script_runs( [ $script, '-g' ], { exit => 2 }, "Script $script runs with unknown option" );
+script_stderr_is "Unknown option: g\n", 'Report error';
