@@ -19,17 +19,21 @@ for ( qw( EMAIL FULL_NAME ) ) {
 }
 
 my @main_module_namespace = qw( Local New Module );
-my $version               = '1.0.0';
 my $release_status        = 'unstable';               # transition: unstable => testing => stable
 
 my $distname            = join '-',  @main_module_namespace;
 my $main_module         = join '::', @main_module_namespace;
 my $main_module_file    = catfile( @main_module_namespace ) . '.pm';
 my $main_module_podfile = catfile( @main_module_namespace ) . '.pod';
-my %att                 = (
+# we are not using
+# VERSION_FROM  => catfile( 'lib', $main_module_file )
+# because we have to set the main modul version in META_MERGE/provides too
+my $main_module_version = MM->parse_version( catfile( 'lib', $main_module_file ) );
+
+my %att = (
   NAME          => $main_module,
   AUTHOR        => "$ENV{ FULL_NAME } <$ENV{ EMAIL }>",
-  VERSION_FROM  => catfile( 'lib', $main_module_file ),
+  VERSION       => $main_module_version,
   ABSTRACT_FROM => catfile( 'lib', $main_module_podfile ),
   # another valid license string is "restricted"
   # https://metacpan.org/pod/CPAN::Meta::Spec#license
@@ -37,7 +41,7 @@ my %att                 = (
   MIN_PERL_VERSION => '5.14.4',
   # safe naming of custom arguments passed to Makefile.PL
   # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/470
-  DISTVNAME => "$distname-$version"
+  DISTVNAME => "$distname-$main_module_version"
     . ( $release_status ne 'stable' ? '-TRIAL1' : '' ),    # related to the below release_status metadata field
   EXE_FILES  => [ glob( join( ' ', map { catfile( $_, '*' ) } qw( bin script ) ) ) ],
   META_MERGE => {
@@ -46,11 +50,11 @@ my %att                 = (
     provides       => {
       $main_module => {
         file    => catfile( 'lib', $main_module_file ),
-        version => $version
+        version => $main_module_version
       },
       "$main_module\::CLI" => {
         file    => catfile( 'lib', @main_module_namespace, 'CLI' ) . '.pm',
-        version => $version
+        version => MM->parse_version( catfile( 'lib', @main_module_namespace, 'CLI' ) . '.pm' )
       }
     },
     resources => {
