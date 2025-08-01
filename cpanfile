@@ -12,7 +12,7 @@ on runtime => sub { };
 
 on test => sub {
   requires 'File::Temp'    => '0';
-  requires 'Test::Deep'    => '0';
+  requires 'Test::Deep'    => '0' if $] >= 5.012;
   requires 'Sub::Override' => '0'
 };
 

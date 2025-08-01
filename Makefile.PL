@@ -38,7 +38,7 @@ my %att = (
   # another valid license string is "restricted"
   # https://metacpan.org/pod/CPAN::Meta::Spec#license
   LICENSE          => 'perl_5',
-  MIN_PERL_VERSION => '5.14.4',
+  MIN_PERL_VERSION => '5.12.5',
   # safe naming of custom arguments passed to Makefile.PL
   # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/470
   DISTVNAME => "$distname-$main_module_version"
