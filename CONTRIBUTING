@@ -50,3 +50,9 @@ REMARKS
 
 - We assume that all provided modules (META_MERGE/provides) have the same
   version as the main module.
+
+- The template script (EXE_FILES) is a CLI tool that is implemented as a
+  modulino.
+
+- The Makefile.PL build file is implemented as a modulino too. The
+  t/Makefile.PL.t test script shows its module behaviour.
