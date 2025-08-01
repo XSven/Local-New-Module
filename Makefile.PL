@@ -54,7 +54,7 @@ my %att = (
       },
       "$main_module\::CLI" => {
         file    => catfile( 'lib', @main_module_namespace, 'CLI' ) . '.pm',
-        version => MM->parse_version( catfile( 'lib', @main_module_namespace, 'CLI' ) . '.pm' )
+        version => $main_module_version
       }
     },
     resources => {

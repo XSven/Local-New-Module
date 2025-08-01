@@ -47,3 +47,6 @@ REMARKS
 - In verbose mode (TEST_VERBOSE=1) the t/load.t test script shows all kinds of
   information known to each test script: Perl version, Harness version,
   Test::More version, Test::Builder version, PERL5LIB, @INC, and PATH.
+
+- We assume that all provided modules (META_MERGE/provides) have the same
+  version as the main module.
