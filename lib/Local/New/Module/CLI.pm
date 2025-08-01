@@ -5,10 +5,7 @@ use warnings;
 
 package Local::New::Module::CLI;
 
-# keeping the following $VERSION declaration on a single line is important
-#<<<
-use version 0.9915 qw( ); our $VERSION = version->declare( '1.0.0' );
-#>>>
+our $VERSION = 'v1.0.0';
 
 use File::Basename qw( basename );
 use Getopt::Std    qw( getopts );
